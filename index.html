@@ -155,7 +155,7 @@
           <div class="fields">
             <div class="field">
               <label for="name">Name</label>
-              <input type="text" name="name" id="name" required />
+              <input type="text" name="name" id="name" aria-label="Your Name" required />
             </div>
             <div class="field">
               <label for="email">Email</label>
@@ -184,9 +184,10 @@ document.getElementById("contact-form").addEventListener("submit", async functio
   });
 
   if (response.ok) {
+    form.reset(); // clear fields
     window.location.href = "thank-you.html"; // ✅ force redirect
   } else {
-    alert("Oops! Something went wrong. Please try again.");
+    alert("Oops! Something went wrong. Please try again later or email me directly at abhyu904452@gmail.com");
   }
 });
 </script>
@@ -215,6 +216,7 @@ document.getElementById("contact-form").addEventListener("submit", async functio
   <script src="assets/js/main.js"></script>
 </body>
 </html>
+
 
 
 
