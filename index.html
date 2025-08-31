@@ -150,25 +150,33 @@
       <div class="inner">
         <h2 class="major">Get in touch</h2>
         <p>Interested in collaborating or learning more about my work? Drop me a message or connect with me.</p>
-        <form method="post" action="#">
+        <form action="https://formspree.io/f/xdklzzdp" method="POST">
           <div class="fields">
             <div class="field">
               <label for="name">Name</label>
-              <input type="text" name="name" id="name" />
+              <input type="text" name="name" id="name" required />
             </div>
             <div class="field">
               <label for="email">Email</label>
-              <input type="email" name="email" id="email" />
+              <input type="email" name="email" id="email" required />
             </div>
             <div class="field">
               <label for="message">Message</label>
-              <textarea name="message" id="message" rows="4"></textarea>
+              <textarea name="message" id="message" rows="4" required></textarea>
             </div>
           </div>
+
+          <!-- Honeypot for bots -->
+          <input type="text" name="_gotcha" style="display:none" />
+
+          <!-- Optional redirect -->
+          <!-- <input type="hidden" name="_redirect" value="https://abhyuday-srivastava.github.io/thank-you.html"> -->
+
           <ul class="actions">
             <li><input type="submit" value="Send Message" /></li>
           </ul>
-        </form>
+      </form>
+
         <ul class="contact">
           <li class="icon solid fa-phone"><a href="tel:+916390800040">+91-6390800040</a></li>
           <li class="icon solid fa-envelope"><a href="mailto:abhyu904452@gmail.com">abhyu904452@gmail.com</a></li>
@@ -192,6 +200,7 @@
   <script src="assets/js/main.js"></script>
 </body>
 </html>
+
 
 
 
