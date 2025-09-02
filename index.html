@@ -177,26 +177,26 @@
           </ul>
         </form>
 
-<script>
-document.getElementById("contact-form").addEventListener("submit", async function(e) {
-  e.preventDefault(); // stop normal submit
-  const form = e.target;
-  const data = new FormData(form);
-
-  const response = await fetch(form.action, {
-    method: form.method,
-    body: data,
-    headers: { 'Accept': 'application/json' }
-  });
-
-  if (response.ok) {
-    form.reset(); // clear fields
-    window.location.href = "thank-you.html"; // ✅ force redirect
-  } else {
-    alert("Oops! Something went wrong. Please try again later or email me directly at abhyu904452@gmail.com");
-  }
-});
-</script>
+        <script>
+        document.getElementById("contact-form").addEventListener("submit", async function(e) {
+          e.preventDefault(); // stop normal submit
+          const form = e.target;
+          const data = new FormData(form);
+        
+          const response = await fetch(form.action, {
+            method: form.method,
+            body: data,
+            headers: { 'Accept': 'application/json' }
+          });
+        
+          if (response.ok) {
+            form.reset(); // clear fields
+            window.location.href = "thank-you.html"; // ✅ force redirect
+          } else {
+            alert("Oops! Something went wrong. Please try again later or email me directly at abhyu904452@gmail.com");
+          }
+        });
+        </script>
 
 
         <ul class="contact">
@@ -207,8 +207,9 @@ document.getElementById("contact-form").addEventListener("submit", async functio
           <li class="icon brands fa-linkedin"><a href="http://linkedin.com/in/abhyuday-srivastava" target="_blank">linkedin.com/in/abhyuday-srivastava</a></li>
         </ul>
         <ul class="copyright">
-          <li>&copy; Abhyuday Srivastava. All rights reserved.</li>
+          <li>&copy; <span id="year"></span> Abhyuday Srivastava. All rights reserved.</li>
         </ul>
+
       </div>
     </section>
 
@@ -222,9 +223,15 @@ document.getElementById("contact-form").addEventListener("submit", async functio
   <script src="assets/js/util.js"></script>
   <script src="assets/js/main.js"></script>
   
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+
+  
 
 </body>
 </html>
+
 
 
 
