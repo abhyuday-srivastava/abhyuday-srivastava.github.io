@@ -4263,10 +4263,10 @@ input, select, textarea {
 
 /* Download button mobile tight corner fix */
 
-@media (max-width: 480px) {
-  .button {
-    padding: 0.9em 2em;
-    font-size: 1em; /* optional: make text slightly bigger */
-  }
+/* Custom button spacing */
+.button {
+  padding: 0.75em 1.5em;  /* top-bottom, left-right */
 }
+
+
 
