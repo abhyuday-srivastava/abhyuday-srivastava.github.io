@@ -4199,3 +4199,51 @@ input, select, textarea {
     text-align: center;
   }
 }
+
+
+/* Fade-in animation */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeInUp 1s ease-out forwards;
+}
+
+/* Staggered delay for a nice effect */
+.banner-text.fade-in {
+  animation-delay: 0.2s;
+}
+
+.banner-photo.fade-in {
+  animation-delay: 0.5s;
+}
+
+/* Zoom-in animation for button */
+@keyframes zoomIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.zoom-in {
+  opacity: 0;
+  animation: zoomIn 0.6s ease-out forwards;
+  animation-delay: 0.9s; /* comes after text + photo */
+}
+
+
+
