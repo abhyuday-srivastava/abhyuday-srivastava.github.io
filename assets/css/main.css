@@ -4260,3 +4260,13 @@ input, select, textarea {
   animation-delay: 1.1s;
 }
 
+
+/* Download button mobile tight corner fix */
+
+@media (max-width: 480px) {
+  .button {
+    padding: 0.9em 2em;
+    font-size: 1em; /* optional: make text slightly bigger */
+  }
+}
+
