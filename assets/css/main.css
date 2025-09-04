@@ -4265,8 +4265,14 @@ input, select, textarea {
 
 /* Custom button spacing */
 .button {
-  padding: 0.4em 1.2em;  /* top-bottom, left-right */
+  padding: 0.4em 1.2em;
+  line-height: 1.2;   /* balances vertical spacing */
+  display: inline-flex; 
+  align-items: center; /* ensures text is vertically centered */
+  justify-content: center; /* keeps text centered horizontally */
 }
+
+
 
 
 
