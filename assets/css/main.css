@@ -4265,8 +4265,9 @@ input, select, textarea {
 
 /* Custom button spacing */
 .button {
-  padding: 0.75em 1.5em;  /* top-bottom, left-right */
+  padding: 0.4em 1.2em;  /* top-bottom, left-right */
 }
+
 
 
 
