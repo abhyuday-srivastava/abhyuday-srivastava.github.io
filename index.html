@@ -256,15 +256,42 @@
   <script src="assets/js/breakpoints.min.js"></script>
   <script src="assets/js/util.js"></script>
   <script src="assets/js/main.js"></script>
-  
+
+  <!--   Script for up to date copyright year fetch -->
   <script>
     document.getElementById("year").textContent = new Date().getFullYear();
   </script>
+
+  <!--   Script for collecting visitor informations -->
+  <script>
+  (async () => {
+    // Collect basic data
+    const ua = navigator.userAgent;
+    const referrer = document.referrer || "Direct";
+  
+    // Get IP from a free API
+    const ipData = await fetch("https://api64.ipify.org?format=json").then(r => r.json());
+  
+    // Send to Google Apps Script
+    fetch("https://script.google.com/macros/s/AKfycbxpM6f8XjkvkAC6pP1ERMvSO3MUCzCHJ3MgmSZGFnDWypF0MicP8VsOAtybbkv2Wgukdg/exec", {
+      method: "POST",
+      body: JSON.stringify({
+        ip: ipData.ip,
+        ua: ua,
+        referrer: referrer,
+        device: /Mobi|Android/i.test(ua) ? "Mobile" : "Desktop"
+      }),
+      headers: { "Content-Type": "application/json" }
+    });
+  })();
+  </script>
+
 
   
 
 </body>
 </html>
+
 
 
 
