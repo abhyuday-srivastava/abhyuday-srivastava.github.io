@@ -264,32 +264,37 @@
     <!--   Script for collecting visitor informations -->
   <script>
   (async () => {
-    // Collect basic data
-    const ua = navigator.userAgent;
-    const referrer = document.referrer || "Direct";
+    try {
+      const ua = navigator.userAgent;
+      const referrer = document.referrer || "Direct";
   
-    // Get IP from a free API
-    const ipData = await fetch("https://api64.ipify.org?format=json").then(r => r.json());
+      // Get IP
+      const ipData = await fetch("https://api64.ipify.org?format=json").then(r => r.json());
   
-    // Send to Google Apps Script
-    fetch("https://script.google.com/macros/s/AKfycbxpM6f8XjkvkAC6pP1ERMvSO3MUCzCHJ3MgmSZGFnDWypF0MicP8VsOAtybbkv2Wgukdg/exec", {
-      method: "POST",
-      body: JSON.stringify({
-        ip: ipData.ip,
-        ua: ua,
-        referrer: referrer,
-        device: /Mobi|Android/i.test(ua) ? "Mobile" : "Desktop"
-      }),
-      headers: { "Content-Type": "application/json" }
-    });
+      // Send data to Google Script
+      await fetch("https://script.google.com/macros/s/AKfycbw8CjMsc4TR3VzJ4_VA1_ZRSOzOo_9OImPKhvIANByb-Sd58lBmLG9LVe1a6mu8CMUGoQ/exec", {
+        method: "POST",
+        body: JSON.stringify({
+          ip: ipData.ip,
+          ua: ua,
+          referrer: referrer,
+          device: /Mobi|Android/i.test(ua) ? "Mobile" : "Desktop"
+        }),
+        headers: { "Content-Type": "application/json" }
+      });
+    } catch (err) {
+      console.error("Logging failed:", err);
+    }
   })();
   </script>
+
 
 
   
 
 </body>
 </html>
+
 
 
 
