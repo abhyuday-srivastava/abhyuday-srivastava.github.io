@@ -263,25 +263,26 @@
 
     <!--   Script for collecting visitor informations -->
   <script>
-  (async () => {
+  (async function logVisitor() {
     try {
-      const ua = navigator.userAgent;
-      const referrer = document.referrer || "Direct";
+      const logEndpoint = "https://script.google.com/macros/s/AKfycbx0x2PeH4vT88rYKzXMXTgtn6O7hxU9AId3T6AsobURNzG-vdi9w3PiahajFHafZ8UbBQ/exec"; // 🔴 Replace with your Google Apps Script Web App URL
   
-      // Get IP
-      const ipData = await fetch("https://api64.ipify.org?format=json").then(r => r.json());
+      const ipData = await fetch("https://api64.ipify.org?format=json").then(r => r.json()).catch(() => ({ ip: "Unknown" }));
   
-      // Send data to Google Script
-      await fetch("https://script.google.com/macros/s/AKfycbw8CjMsc4TR3VzJ4_VA1_ZRSOzOo_9OImPKhvIANByb-Sd58lBmLG9LVe1a6mu8CMUGoQ/exec", {
+      const data = {
+        ip: ipData.ip,
+        userAgent: navigator.userAgent,
+        referrer: document.referrer || "Direct"
+      };
+  
+      await fetch(logEndpoint, {
         method: "POST",
-        body: JSON.stringify({
-          ip: ipData.ip,
-          ua: ua,
-          referrer: referrer,
-          device: /Mobi|Android/i.test(ua) ? "Mobile" : "Desktop"
-        }),
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
       });
+  
+      console.log("Visitor logged:", data);
+  
     } catch (err) {
       console.error("Logging failed:", err);
     }
@@ -290,10 +291,12 @@
 
 
 
+
   
 
 </body>
 </html>
+
 
 
 
