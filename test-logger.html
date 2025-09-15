@@ -1,54 +1,60 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Visitor abs Logger Test</title>
+  <title>Visitor Logger Test</title>
 </head>
 <body>
   <h1>Visitor Logger Test</h1>
-  <button id="logBtn">Log abs Visitor</button>
+  <p>Open this page and check your Google Sheet for a new row.</p>
+  <pre id="status"></pre>
 
- <script>
-  const scriptURL = "https://script.google.com/macros/s/AKfycbxvcUN9qusLM0KDmwi4MKraoQrrntUEkWjgmVXHaxlQB2F2HYC80k1F5vbS0bBB-2lwFQ/exec";
+  <script>
+    // Your deployed Apps Script URL (replace with your own /exec URL)
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwOztdLsm89DHVIxI_UzYueD1CjXg0dYkeyNXUkSZXT88zp0TzCFOZ3NI0unkKLNrBpIw/exec";
 
-  async function logVisitor() {
-    try {
-      // Get IP & location
-      const ipResponse = await fetch("https://ipapi.co/json/");
-      const ipData = await ipResponse.json();
+    async function logVisitor() {
+      try {
+        // Get IP + location info
+        const ipResponse = await fetch("https://ipapi.co/json/");
+        const ipData = await ipResponse.json();
 
-      const visitorData = {
-        page: window.location.pathname,
-        referrer: document.referrer || "Direct",
-        userAgent: navigator.userAgent,
-        language: navigator.language || navigator.userLanguage,
-        platform: navigator.platform,
-        screen: `${window.screen.width}x${window.screen.height}`,
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        ip: ipData.ip,
-        city: ipData.city,
-        region: ipData.region,
-        country: ipData.country_name,
-        latitude: ipData.latitude,
-        longitude: ipData.longitude
-      };
+        // Collect visitor info
+        const visitorData = {
+          page: window.location.pathname,
+          referrer: document.referrer || "Direct",
+          userAgent: navigator.userAgent,
+          language: navigator.language || navigator.userLanguage,
+          platform: navigator.platform,
+          screen: `${window.screen.width}x${window.screen.height}`,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          ip: ipData.ip,
+          city: ipData.city,
+          region: ipData.region,
+          country: ipData.country_name,
+          latitude: ipData.latitude,
+          longitude: ipData.longitude
+        };
 
-      // Send to Google Apps Script
-      fetch(scriptURL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(visitorData)
-      });
+        // Send to Apps Script
+        fetch(scriptURL, {
+          method: "POST",
+          mode: "no-cors",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(visitorData)
+        });
 
-    } catch (err) {
-      console.error("Logging failed:", err);
+        document.getElementById("status").innerText =
+          "✅ Visitor data sent to Google Sheet (check Logs tab).";
+
+      } catch (err) {
+        document.getElementById("status").innerText =
+          "❌ Error while logging visitor: " + err;
+      }
     }
-  }
 
-  // Run automatically on page load
-  window.addEventListener("load", logVisitor);
-</script>
-
+    // Run automatically on page load
+    window.addEventListener("load", logVisitor);
+  </script>
 </body>
 </html>
