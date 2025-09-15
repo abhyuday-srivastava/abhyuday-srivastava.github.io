@@ -1,39 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
   <meta charset="UTF-8">
-  <title>Logger Test</title>
+  <title>Visitor Logger Test</title>
 </head>
 <body>
-  <h1>Logger Test Page</h1>
-  <p>If everything works, this page will log your visit to Google Sheets.</p>
+  <h1>Visitor Logger Test</h1>
+  <button id="logBtn">Log Visitor</button>
+
+  <pre id="response"></pre>
 
   <script>
-    async function logVisit() {
-      const logEndpoint = "https://script.google.com/macros/s/AKfycbypKelLwj-rWWCiRt3T2ji0vwlDWgzkKkiY8zwQD2pYqSIJmTZyPElcNWBKs0INYU-G4Q/exec"; // ⬅️ replace with your deployed Apps Script URL
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxE1gRw9VzqvriPEcImO08r7VYDmDRzRA8TAemxUyUTyNSm72jOFfN95jIODFK7rRyHEQ/exec";
 
-      const payload = {
-        ip: "test-ip", // IP won't show directly due to browser privacy
-        userAgent: navigator.userAgent,
-        referrer: document.referrer || "direct"
-      };
-
-      try {
-        const response = await fetch(logEndpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-
-        const result = await response.json();
-        console.log("Logging response:", result);
-
-      } catch (err) {
-        console.error("Logging failed:", err);
-      }
-    }
-
-    logVisit();
+    document.getElementById("logBtn").addEventListener("click", () => {
+      fetch(scriptURL, {
+        method: "POST",
+        mode: "no-cors", // required to bypass CORS restrictions
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          visitor: "Test User",
+          page: window.location.pathname
+        })
+      })
+      .then(res => {
+        document.getElementById("response").innerText = "✅ Request sent. (Response hidden due to no-cors)";
+      })
+      .catch(err => {
+        document.getElementById("response").innerText = "❌ Error: " + err;
+      });
+    });
   </script>
 </body>
 </html>
