@@ -2,59 +2,51 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Visitor Logger Test</title>
+  <title>Test Visitor Logger</title>
 </head>
 <body>
-  <h1>Visitor Logger Test</h1>
-  <p>Open this page and check your Google Sheet for a new row.</p>
-  <pre id="status"></pre>
+  <h1>Visitor Logger Test (Apps Script Proxy)</h1>
+  <p>Open console to check logging.</p>
 
   <script>
-    // Your deployed Apps Script URL (replace with your own /exec URL)
-    const scriptURL = "https://script.google.com/macros/s/AKfycbwOztdLsm89DHVIxI_UzYueD1CjXg0dYkeyNXUkSZXT88zp0TzCFOZ3NI0unkKLNrBpIw/exec";
+    // Replace with your deployed Apps Script Web App URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsJ5jRMA_Or5K665hjDQOHfWhXcx9C4NFq7qEAx6jsYRczCAs8FM-4J6kd9y21IeC-jA/exec";
 
     async function logVisitor() {
       try {
-        // Get IP + location info
-        const ipResponse = await fetch("https://ipapi.co/json/");
-        const ipData = await ipResponse.json();
-
-        // Collect visitor info
-        const visitorData = {
-          page: window.location.pathname,
+        const visitorInfo = {
+          url: window.location.href,
           referrer: document.referrer || "Direct",
           userAgent: navigator.userAgent,
-          language: navigator.language || navigator.userLanguage,
+          language: navigator.language,
           platform: navigator.platform,
-          screen: `${window.screen.width}x${window.screen.height}`,
+          screen: {
+            width: window.screen.width,
+            height: window.screen.height,
+          },
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          ip: ipData.ip,
-          city: ipData.city,
-          region: ipData.region,
-          country: ipData.country_name,
-          latitude: ipData.latitude,
-          longitude: ipData.longitude
+          online: navigator.onLine,
+          cookiesEnabled: navigator.cookieEnabled,
+          timestamp: new Date().toISOString()
         };
 
-        // Send to Apps Script
-        fetch(scriptURL, {
+        console.log("Sending visitor info:", visitorInfo);
+
+        const res = await fetch(SCRIPT_URL, {
           method: "POST",
-          mode: "no-cors",
+          mode: "cors",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(visitorData)
+          body: JSON.stringify(visitorInfo)
         });
 
-        document.getElementById("status").innerText =
-          "✅ Visitor data sent to Google Sheet (check Logs tab).";
-
+        const data = await res.json();
+        console.log("✅ Server response:", data);
       } catch (err) {
-        document.getElementById("status").innerText =
-          "❌ Error while logging visitor: " + err;
+        console.error("⚠️ Error logging visitor:", err);
       }
     }
 
-    // Run automatically on page load
-    window.addEventListener("load", logVisitor);
+    logVisitor();
   </script>
 </body>
 </html>
