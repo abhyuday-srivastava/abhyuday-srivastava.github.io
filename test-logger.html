@@ -6,32 +6,51 @@
 </head>
 <body>
   <h1>Visitor Logger Test</h1>
-  <button id="logBtn">Log Visitor</button>
+  <button id="logBtn">Log abs Visitor</button>
 
   <pre id="response"></pre>
 
-  <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbyRT-C97FP9w08N2Azju2bcyEf4E4tAXVkFam1A6s5_5RkkOXH4XZgo4KC76TsxoOGlmA/exec";
+ <script>
+  const scriptURL = "https://script.google.com/macros/s/AKfycbxvcUN9qusLM0KDmwi4MKraoQrrntUEkWjgmVXHaxlQB2F2HYC80k1F5vbS0bBB-2lwFQ/exec";
 
-    document.getElementById("logBtn").addEventListener("click", () => {
+  async function logVisitor() {
+    try {
+      // Get IP & location
+      const ipResponse = await fetch("https://ipapi.co/json/");
+      const ipData = await ipResponse.json();
+
+      const visitorData = {
+        page: window.location.pathname,
+        referrer: document.referrer || "Direct",
+        userAgent: navigator.userAgent,
+        language: navigator.language || navigator.userLanguage,
+        platform: navigator.platform,
+        screen: `${window.screen.width}x${window.screen.height}`,
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+        ip: ipData.ip,
+        city: ipData.city,
+        region: ipData.region,
+        country: ipData.country_name,
+        latitude: ipData.latitude,
+        longitude: ipData.longitude
+      };
+
+      // Send to Google Apps Script
       fetch(scriptURL, {
         method: "POST",
-        mode: "no-cors", // required to bypass CORS restrictions
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          visitor: "Test User",
-          page: window.location.pathname
-        })
-      })
-      .then(res => {
-        document.getElementById("response").innerText = "✅ Request sent. (Response hidden due to no-cors)";
-      })
-      .catch(err => {
-        document.getElementById("response").innerText = "❌ Error: " + err;
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(visitorData)
       });
-    });
-  </script>
+
+    } catch (err) {
+      console.error("Logging failed:", err);
+    }
+  }
+
+  // Run automatically on page load
+  window.addEventListener("load", logVisitor);
+</script>
+
 </body>
 </html>
