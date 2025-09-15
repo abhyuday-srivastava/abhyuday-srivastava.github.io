@@ -263,30 +263,36 @@
 
     <!--   Script for collecting visitor informations -->
   <script>
-  (async function logVisitor() {
-    try {
-      const logEndpoint = "https://script.google.com/macros/s/AKfycbwOnJp7iSb7mGu26odOcHyE1c0k-P3f2-9TuBVzQZ5_E1So_ZkDQTWeBuCcniOBwV0wdg/exec"; // 🔴 Replace with your Google Apps Script Web App URL
-  
-      const ipData = await fetch("https://api64.ipify.org?format=json").then(r => r.json()).catch(() => ({ ip: "Unknown" }));
-  
-      const data = {
-        ip: ipData.ip,
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjqTnR4oYFimHoimNMy78Z8A99f3Q0480Gzi5SpQVVYTI4vSKnv1A6P52AlbDncrD0Sw/exec"; // Replace with your Apps Script /exec URL
+
+    async function logVisitor() {
+      const visitorInfo = {
+        url: window.location.href,
+        referrer: document.referrer || "Direct",
         userAgent: navigator.userAgent,
-        referrer: document.referrer || "Direct"
+        language: navigator.language,
+        platform: navigator.platform,
+        screen: {
+          width: window.screen.width,
+          height: window.screen.height
+        },
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
       };
-  
-      await fetch(logEndpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data)
-      });
-  
-      console.log("Visitor logged:", data);
-  
-    } catch (err) {
-      console.error("Logging failed:", err);
+
+      try {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          mode: "no-cors", // Critical: bypass browser preflight
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(visitorInfo)
+        });
+        console.log("✅ Visitor info sent (check Sheet).");
+      } catch (err) {
+        console.error("⚠️ Logging failed:", err);
+      }
     }
-  })();
+
+    window.addEventListener("load", logVisitor);
   </script>
 
 
@@ -296,6 +302,7 @@
 
 </body>
 </html>
+
 
 
 
