@@ -6,42 +6,38 @@
 </head>
 <body>
   <h1>Visitor Logger Test (Option 2)</h1>
-  <p>Open console to see logging status.</p>
+  <p>Open console to check logs. Your Sheet will store data automatically.</p>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJ5LSnJN-XHZSLcWkXFSBkAVljQVf8IIb2YL9CZ8Iq4lza7ZgQsjzRUskEgJAG59uPmQ/exec"; // replace
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx94MIYA5oAQd4rXvVcdaLOiM7hXRmZ6gRQonzXGptd2QB62YgyhowRwdRt5oJoAJ8Ynw/exec"; // Replace with your Apps Script /exec URL
 
     async function logVisitor() {
+      const visitorInfo = {
+        url: window.location.href,
+        referrer: document.referrer || "Direct",
+        userAgent: navigator.userAgent,
+        language: navigator.language,
+        platform: navigator.platform,
+        screen: {
+          width: window.screen.width,
+          height: window.screen.height
+        },
+        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
+      };
+
       try {
-        const visitorInfo = {
-          url: window.location.href,
-          referrer: document.referrer || "Direct",
-          userAgent: navigator.userAgent,
-          language: navigator.language,
-          platform: navigator.platform,
-          screen: {
-            width: window.screen.width,
-            height: window.screen.height
-          },
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-        };
-
-        console.log("Sending visitor info:", visitorInfo);
-
-        const res = await fetch(SCRIPT_URL, {
+        await fetch(SCRIPT_URL, {
           method: "POST",
+          mode: "no-cors", // Critical: bypass browser preflight
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(visitorInfo)
         });
-
-        const data = await res.json();
-        console.log("✅ Server response:", data);
+        console.log("✅ Visitor info sent (check Sheet).");
       } catch (err) {
-        console.error("⚠️ Error logging visitor:", err);
+        console.error("⚠️ Logging failed:", err);
       }
     }
 
-    // Auto-run on page load
     window.addEventListener("load", logVisitor);
   </script>
 </body>
