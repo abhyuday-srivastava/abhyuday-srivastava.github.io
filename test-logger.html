@@ -5,12 +5,11 @@
   <title>Test Visitor Logger</title>
 </head>
 <body>
-  <h1>Visitor Logger Test (Apps Script Proxy)</h1>
-  <p>Open console to check logging.</p>
+  <h1>Visitor Logger Test (Option 2)</h1>
+  <p>Open console to see logging status.</p>
 
   <script>
-    // Replace with your deployed Apps Script Web App URL
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzsJ5jRMA_Or5K665hjDQOHfWhXcx9C4NFq7qEAx6jsYRczCAs8FM-4J6kd9y21IeC-jA/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyJ5LSnJN-XHZSLcWkXFSBkAVljQVf8IIb2YL9CZ8Iq4lza7ZgQsjzRUskEgJAG59uPmQ/exec"; // replace
 
     async function logVisitor() {
       try {
@@ -22,19 +21,15 @@
           platform: navigator.platform,
           screen: {
             width: window.screen.width,
-            height: window.screen.height,
+            height: window.screen.height
           },
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-          online: navigator.onLine,
-          cookiesEnabled: navigator.cookieEnabled,
-          timestamp: new Date().toISOString()
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
         };
 
         console.log("Sending visitor info:", visitorInfo);
 
         const res = await fetch(SCRIPT_URL, {
           method: "POST",
-          mode: "cors",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(visitorInfo)
         });
@@ -46,7 +41,8 @@
       }
     }
 
-    logVisitor();
+    // Auto-run on page load
+    window.addEventListener("load", logVisitor);
   </script>
 </body>
 </html>
