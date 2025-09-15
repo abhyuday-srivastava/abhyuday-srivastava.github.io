@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Logger Test</title>
+</head>
+<body>
+  <h1>Logger Test Page</h1>
+  <p>If everything works, this page will log your visit to Google Sheets.</p>
+
+  <script>
+    async function logVisit() {
+      const logEndpoint = "https://script.google.com/macros/s/AKfycbwOnJp7iSb7mGu26odOcHyE1c0k-P3f2-9TuBVzQZ5_E1So_ZkDQTWeBuCcniOBwV0wdg/exec"; // ⬅️ replace with your deployed Apps Script URL
+
+      const payload = {
+        ip: "test-ip", // IP won't show directly due to browser privacy
+        userAgent: navigator.userAgent,
+        referrer: document.referrer || "direct"
+      };
+
+      try {
+        const response = await fetch(logEndpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+        console.log("Logging response:", result);
+
+      } catch (err) {
+        console.error("Logging failed:", err);
+      }
+    }
+
+    logVisit();
+  </script>
+</body>
+</html>
