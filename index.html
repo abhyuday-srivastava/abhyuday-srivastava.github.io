@@ -263,35 +263,60 @@
 
     <!--   Script for collecting visitor informations -->
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzjqTnR4oYFimHoimNMy78Z8A99f3Q0480Gzi5SpQVVYTI4vSKnv1A6P52AlbDncrD0Sw/exec"; // Replace with your Apps Script /exec URL
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyugcW8TuHzko0wXBUc1MAXQ7HKMq4NzaVMJfd2Wbk2pM2jdSZW-wAAzIqWHBRl9f4BEQ/exec"; 
+    // ^ Replace with your deployed Apps Script /exec URL if different
 
     async function logVisitor() {
-      const visitorInfo = {
-        url: window.location.href,
-        referrer: document.referrer || "Direct",
-        userAgent: navigator.userAgent,
-        language: navigator.language,
-        platform: navigator.platform,
-        screen: {
-          width: window.screen.width,
-          height: window.screen.height
-        },
-        timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
-      };
-
       try {
+        // Step 1: Get IP + Geo
+        let ipData = {};
+        try {
+          const res = await fetch("https://ipapi.co/json/");
+          ipData = await res.json();
+        } catch (err) {
+          console.warn("⚠️ Could not fetch IP info:", err);
+          ipData = {};
+        }
+
+        // Step 2: Collect browser info
+        const visitorInfo = {
+          url: window.location.href,
+          referrer: document.referrer || "Direct",
+          userAgent: navigator.userAgent,
+          language: navigator.language,
+          platform: navigator.platform,
+          screen: {
+            width: window.screen.width,
+            height: window.screen.height
+          },
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+
+          // IP + Geo
+          ip: ipData.ip || "Unknown",
+          city: ipData.city || "Unknown",
+          region: ipData.region || "Unknown",
+          country: ipData.country_name || "Unknown",
+          latitude: ipData.latitude || "Unknown",
+          longitude: ipData.longitude || "Unknown"
+        };
+
+        console.log("📤 Sending visitor info:", visitorInfo);
+
+        // Step 3: Send to Google Apps Script
         await fetch(SCRIPT_URL, {
           method: "POST",
-          mode: "no-cors", // Critical: bypass browser preflight
+          mode: "no-cors", // avoid preflight errors
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(visitorInfo)
         });
-        console.log("✅ Visitor info sent (check Sheet).");
+
+        console.log("✅ Visitor info sent (check your Sheet).");
       } catch (err) {
-        console.error("⚠️ Logging failed:", err);
+        console.error("❌ Logging failed:", err);
       }
     }
 
+    // Auto-run on page load
     window.addEventListener("load", logVisitor);
   </script>
 
@@ -302,6 +327,7 @@
 
 </body>
 </html>
+
 
 
 
