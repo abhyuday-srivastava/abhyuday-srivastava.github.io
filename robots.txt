@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://abhyuday-srivastava.github.io/sitemap.xml
